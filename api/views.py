@@ -8,6 +8,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.decorators import permission_classes
 
 from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 from api.services.payouts import initiate_bank_transfer, perform_name_enquiry
 from .models import WebhookLog
@@ -251,6 +252,20 @@ class FundSandboxWalletView(APIView):
 
 class TransferRequestListView(APIView):
 
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                "parameter_name",
+                openapi.IN_QUERY,
+                description="A description of what this optional param does",
+                type=openapi.TYPE_STRING,
+                required=False,  # This makes it optional
+            ),
+        ],
+        responses={201: (FundSandboxWalletSerializer)},
+        operation_summary=("Fund Sandbox"),
+        operation_description=("Funding the sandbox to be able to test transfer"),
+    )
     def get(self, request):
 
         params = {}

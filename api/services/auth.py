@@ -38,4 +38,6 @@ def get_access_token():
     TOKEN_CACHE["token"] = access_token
     TOKEN_CACHE["expires_at"] = current_time + expires_in - 60
 
+    print(access_token)
+
     return access_token

@@ -138,6 +138,7 @@ def create_fixed_virtual_account(data):
             "phone": customer.phone,
             "externalId": customer.external_id,
             "bvn": customer.bvn,
+            "dob": (customer.dob.strftime("%Y-%m-%d")),
             "address": {
                 "line1": address_data.get("line1"),
                 "line2": address_data.get("line2"),
@@ -147,7 +148,6 @@ def create_fixed_virtual_account(data):
                 "countryCode": address_data.get("country_code"),
             },
         },
-        "dob": (customer.dob.strftime("%Y-%m-%d")),
         "businessId": (settings.PAYONUS_BUSINESS_ID),
         "reference": str(transaction.reference),
     }

@@ -5,10 +5,12 @@ from .views import (
     BankTransferView,
     CreateDynamicVirtualAccountView,
     CreateFixedVirtualAccountView,
+    EFTPayoutView,
     FixedVirtualAccountListView,
     FundSandboxWalletView,
     MobileMoneyCollectionView,
     MobileMoneyNetworksView,
+    MobileMoneyPayoutView,
     NameEnquiryView,
     PayonusWebhookView,
     TransferRequestListView,
@@ -66,5 +68,13 @@ urlpatterns = [
     path(
         "payouts/transfers/",
         TransferRequestListView.as_view(),
+    ),
+    path(
+        "payouts/mobile-money/",
+        MobileMoneyPayoutView.as_view(),
+    ),
+    path(
+        "payouts/eft/",
+        EFTPayoutView.as_view(),
     ),
 ]

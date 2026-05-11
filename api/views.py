@@ -10,13 +10,15 @@ from rest_framework.decorators import permission_classes
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-from api.services.payouts import initiate_bank_transfer, perform_name_enquiry
+from api.services.payouts import initiate_bank_transfer, initiate_eft_payout, initiate_mobile_money_payout, perform_name_enquiry
 from .models import WebhookLog
 from .serializers import (
     BankTransferSerializer,
     DynamicVirtualAccountSerializer,
+    EFTPayoutSerializer,
     FundSandboxWalletSerializer,
     MobileMoneyCollectionSerializer,
+    MobileMoneyPayoutSerializer,
     NameEnquirySerializer,
     VerifyMobileMoneyOTPSerializer,
     VirtualAccountResponseSerializer,
@@ -295,5 +297,25 @@ class TransferRequestListView(APIView):
                 params[field] = value
 
         response = fetch_transfer_requests(params=params)
+
+        return Response(response)
+
+
+class MobileMoneyPayoutView(APIView):
+    def post(self, request):
+        serializer = MobileMoneyPayoutSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        response = initiate_mobile_money_payout(serializer.validated_data)
+
+        return Response(response)
+
+
+class EFTPayoutView(APIView):
+    def post(self, request):
+        serializer = EFTPayoutSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        response = initiate_eft_payout(serializer.validated_data)
 
         return Response(response)

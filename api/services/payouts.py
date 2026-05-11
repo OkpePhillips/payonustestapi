@@ -76,3 +76,85 @@ def initiate_bank_transfer(data):
     transaction.save()
 
     return response
+
+
+def initiate_mobile_money_payout(data):
+    transaction = Transaction.objects.create(
+        tx_type="payout",
+        channel="mobile_money_payout",
+        amount=data["amount"],
+        currency=data["currency"],
+        country_code=data["country_code"],
+        status="pending",
+    )
+
+    payload = {
+        "beneficiaryAccountNumber": data["beneficiary_account_number"],
+        "beneficiaryAccountName": data["beneficiary_account_name"],
+        "momoNetwork": data["momo_network"],
+        "transferType": "WALLET_TO_MOMO",
+        "amount": str(data["amount"]),
+        "businessId": settings.PAYONUS_BUSINESS_ID,
+        "reference": str(transaction.reference),
+        "countryCode": data["country_code"],
+        "currency": data["currency"],
+    }
+
+    if data.get("narration"):
+        payload["narration"] = data["narration"]
+
+    if data.get("notification_url"):
+        payload["notificationUrl"] = data["notification_url"]
+
+    response = PayonusClient.post("/api/v1/transfer-requests/bank-transfer", payload)
+
+    response_data = response.get("data", response)
+
+    transaction.provider_response = response
+    transaction.provider_reference = response_data.get("onusReference")
+    transaction.fee = response_data.get("fee", 0)
+    transaction.status = response_data.get("paymentStatus", "pending").lower()
+    transaction.save()
+
+    return response
+
+
+def initiate_eft_payout(data):
+    transaction = Transaction.objects.create(
+        tx_type="payout",
+        channel="eft_payout",
+        amount=data["amount"],
+        currency=data["currency"],
+        country_code=data["country_code"],
+        status="pending",
+    )
+
+    payload = {
+        "beneficiaryAccountNumber": data["beneficiary_account_number"],
+        "beneficiaryAccountName": data["beneficiary_account_name"],
+        "eftBank": data["eft_bank"],
+        "transferType": "WALLET_TO_EFT",
+        "amount": str(data["amount"]),
+        "businessId": settings.PAYONUS_BUSINESS_ID,
+        "reference": str(transaction.reference),
+        "countryCode": data["country_code"],
+        "currency": data["currency"],
+    }
+
+    if data.get("narration"):
+        payload["narration"] = data["narration"]
+
+    if data.get("notification_url"):
+        payload["notificationUrl"] = data["notification_url"]
+
+    response = PayonusClient.post("/api/v1/transfer-requests/bank-transfer", payload)
+
+    response_data = response.get("data", response)
+
+    transaction.provider_response = response
+    transaction.provider_reference = response_data.get("onusReference")
+    transaction.fee = response_data.get("fee", 0)
+    transaction.status = response_data.get("paymentStatus", "pending").lower()
+    transaction.save()
+
+    return response

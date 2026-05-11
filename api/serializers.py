@@ -136,3 +136,33 @@ class FundSandboxWalletSerializer(serializers.Serializer):
     account_number = serializers.CharField()
 
     amount = serializers.DecimalField(max_digits=12, decimal_places=2)
+
+
+class MobileMoneyPayoutSerializer(serializers.Serializer):
+    beneficiary_account_number = serializers.CharField()
+    beneficiary_account_name = serializers.CharField()
+    momo_network = serializers.CharField()
+
+    amount = serializers.DecimalField(max_digits=12, decimal_places=2)
+
+    country_code = serializers.CharField(default="CI")
+    currency = serializers.CharField(default="XOF")
+
+    narration = serializers.CharField(required=False, allow_blank=True)
+
+    notification_url = serializers.URLField(required=False)
+
+
+class EFTPayoutSerializer(serializers.Serializer):
+    beneficiary_account_number = serializers.CharField()
+    beneficiary_account_name = serializers.CharField()
+    eft_bank = serializers.CharField()
+
+    amount = serializers.DecimalField(max_digits=12, decimal_places=2)
+
+    country_code = serializers.CharField(default="ZA")
+    currency = serializers.CharField(default="ZAR")
+
+    narration = serializers.CharField(required=False, allow_blank=True)
+
+    notification_url = serializers.URLField(required=False)

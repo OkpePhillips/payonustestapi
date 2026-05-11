@@ -31,7 +31,7 @@ SECRET_KEY = "django-insecure-z6=nt4jfg#*vpzwmo())*o&+!q^tu4ye2&5e%%a!&7=w$fe@t=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["payonustestapi.onrender.com/"]
+ALLOWED_HOSTS = ["payonustestapi.onrender.com", "localhost", "127.0.0.1"]
 
 
 # Application definition

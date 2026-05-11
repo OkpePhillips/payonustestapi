@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .views import (
+    BankListView,
     CreateDynamicVirtualAccountView,
     CreateFixedVirtualAccountView,
     FixedVirtualAccountListView,
@@ -41,5 +42,9 @@ urlpatterns = [
     path(
         "payments/mobile-money/networks/",
         MobileMoneyNetworksView.as_view(),
+    ),
+    path(
+        "payouts/banks/",
+        BankListView.as_view(),
     ),
 ]

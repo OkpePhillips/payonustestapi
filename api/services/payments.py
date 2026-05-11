@@ -274,3 +274,15 @@ def verify_mobile_money_otp(data):
 def fetch_mobile_money_networks():
 
     return PayonusClient.get("/api/v1/mobile-money/networks")
+
+
+def fetch_banks(currency=None):
+
+    params = {}
+
+    if currency:
+        params["key"] = currency
+
+    response = PayonusClient.get("/api/v1/banks", params=params)
+
+    return response

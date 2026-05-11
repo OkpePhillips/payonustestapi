@@ -20,6 +20,7 @@ from .serializers import (
 from .services.payments import (
     create_dynamic_virtual_account,
     create_fixed_virtual_account,
+    fetch_banks,
     fetch_mobile_money_networks,
     initiate_mobile_money_collection,
     list_fixed_virtual_accounts,
@@ -170,5 +171,16 @@ class MobileMoneyNetworksView(APIView):
     def get(self, request):
 
         response = fetch_mobile_money_networks()
+
+        return Response(response)
+
+
+class BankListView(APIView):
+
+    def get(self, request):
+
+        currency = request.query_params.get("currency")
+
+        response = fetch_banks(currency=currency)
 
         return Response(response)

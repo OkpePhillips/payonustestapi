@@ -63,14 +63,6 @@ def create_dynamic_virtual_account(data):
     if data.get("redirect_url"):
         payload["redirectUrl"] = data["redirect_url"]
 
-    # wallet payment option
-    # if data.get("payment_channel") == "PAY_WITH_WALLET":
-
-    #     payload["walletType"] = data.get("wallet_type")
-
-    #     payload["paymentChannel"] = "PAY_WITH_WALLET"
-
-    #     payload["redirectUrl"] = data.get("redirect_url")
 
     response = PayonusClient.post("/api/v1/virtual-accounts/dynamic", payload)
 
@@ -131,8 +123,6 @@ def create_fixed_virtual_account(data):
         status="processing",
     )
 
-    print(customer.dob)
-
     payload = {
         "customer": {
             "name": customer.name,
@@ -165,7 +155,6 @@ def create_fixed_virtual_account(data):
     response = PayonusClient.post("/api/v1/virtual-accounts/fixed-account", payload)
 
     response_data = response.get("data", {})
-    print(response_data)
 
     transaction.provider_response = response
 
@@ -182,3 +171,13 @@ def create_fixed_virtual_account(data):
     )
 
     return virtual_account
+
+
+def list_fixed_virtual_accounts(params=None):
+
+    response = PayonusClient.get(
+        "/api/v1/virtual-accounts/fixed-accounts",
+        params=params,
+    )
+
+    return response

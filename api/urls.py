@@ -3,6 +3,7 @@ from django.urls import path
 from .views import (
     CreateDynamicVirtualAccountView,
     CreateFixedVirtualAccountView,
+    FixedVirtualAccountListView,
     PayonusWebhookView,
 )
 
@@ -21,5 +22,9 @@ urlpatterns = [
         "webhooks/payonus/",
         PayonusWebhookView.as_view(),
         name="payonus-webhook",
+    ),
+    path(
+        "payments/fixed-accounts/",
+        FixedVirtualAccountListView.as_view(),
     ),
 ]

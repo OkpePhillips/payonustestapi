@@ -38,9 +38,6 @@ class PayonusClient:
 
         response = requests.post(url, headers=PayonusClient.headers(), json=payload)
 
-        print("STATUS:", response.status_code)
-        print("BODY:", response.text)
-
         response.raise_for_status()
 
         return response.json()

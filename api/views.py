@@ -18,6 +18,7 @@ from .serializers import (
 from .services.payments import (
     create_dynamic_virtual_account,
     create_fixed_virtual_account,
+    list_fixed_virtual_accounts,
 )
 
 
@@ -87,3 +88,34 @@ class PayonusWebhookView(APIView):
         )
 
         return Response({"success": True, "message": "Webhook received"}, status=200)
+
+
+class FixedVirtualAccountListView(APIView):
+
+    def get(self, request):
+
+        params = {}
+
+        account_number = request.query_params.get("accountNumber")
+
+        business_ids = request.query_params.get("businessIds")
+
+        created_from = request.query_params.get("createdFrom")
+
+        created_to = request.query_params.get("createdTo")
+
+        if account_number:
+            params["accountNumber"] = account_number
+
+        if business_ids:
+            params["businessIds"] = business_ids
+
+        if created_from:
+            params["createdFrom"] = created_from
+
+        if created_to:
+            params["createdTo"] = created_to
+
+        response = list_fixed_virtual_accounts(params=params)
+
+        return Response(response)

@@ -30,9 +30,9 @@ def get_access_token():
 
     data = response.json()
 
-    access_token = data.get("access_token")
+    access_token = data["data"].get("access_token")
 
-    expires_in = data.get("expires_in", 3600)
+    expires_in = data["data"].get("expires_in", 3600)
 
     # cache slightly before expiry
     TOKEN_CACHE["token"] = access_token

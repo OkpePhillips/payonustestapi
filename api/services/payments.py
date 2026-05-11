@@ -50,7 +50,7 @@ def create_dynamic_virtual_account(data):
             "name": customer.name,
             "email": customer.email,
             "phone": customer.phone,
-            "externalId": customer.external_id,
+            "externalId": customer.external_id or str(customer.id),
         },
     }
 
@@ -62,8 +62,6 @@ def create_dynamic_virtual_account(data):
         payload["paymentChannel"] = "PAY_WITH_WALLET"
 
         payload["redirectUrl"] = data.get("redirect_url")
-
-    print(payload)
 
     response = PayonusClient.post("/api/v1/virtual-accounts/dynamic", payload)
 

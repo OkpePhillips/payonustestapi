@@ -10,7 +10,12 @@ from rest_framework.decorators import permission_classes
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-from api.services.payouts import initiate_bank_transfer, initiate_eft_payout, initiate_mobile_money_payout, perform_name_enquiry
+from api.services.payouts import (
+    initiate_bank_transfer,
+    initiate_eft_payout,
+    initiate_mobile_money_payout,
+    perform_name_enquiry,
+)
 from .models import WebhookLog
 from .serializers import (
     BankTransferSerializer,
@@ -302,6 +307,13 @@ class TransferRequestListView(APIView):
 
 
 class MobileMoneyPayoutView(APIView):
+
+    @swagger_auto_schema(
+        request_body=(MobileMoneyPayoutSerializer),
+        responses={201: (MobileMoneyPayoutSerializer)},
+        operation_summary=("Payout with momo"),
+        operation_description=("Mobile money payout transfer"),
+    )
     def post(self, request):
         serializer = MobileMoneyPayoutSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -312,6 +324,13 @@ class MobileMoneyPayoutView(APIView):
 
 
 class EFTPayoutView(APIView):
+
+    @swagger_auto_schema(
+        request_body=(EFTPayoutSerializer),
+        responses={201: (EFTPayoutSerializer)},
+        operation_summary=("EFT payout"),
+        operation_description=("Payout with eft"),
+    )
     def post(self, request):
         serializer = EFTPayoutSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)

@@ -38,6 +38,21 @@ class PayonusClient:
 
         response = requests.post(url, headers=PayonusClient.headers(), json=payload)
 
-        response.raise_for_status()
+        try:
+
+            response.raise_for_status()
+
+        except requests.HTTPError:
+
+            print("STATUS:", response.status_code)
+            print("BODY:", response.text)
+
+            try:
+                return response.json()
+            except Exception:
+                return {
+                    "status": response.status_code,
+                    "message": response.text,
+                }
 
         return response.json()

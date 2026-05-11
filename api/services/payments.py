@@ -131,6 +131,8 @@ def create_fixed_virtual_account(data):
         status="processing",
     )
 
+    print(customer.dob)
+
     payload = {
         "customer": {
             "name": customer.name,

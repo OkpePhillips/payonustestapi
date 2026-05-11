@@ -298,3 +298,12 @@ def fund_sandbox_ngn_wallet(data):
     response = PayonusClient.post("/api/v1/fund-ngn-account", payload)
 
     return response
+
+
+def fetch_transfer_requests(params):
+
+    params["merchantId"] = settings.PAYONUS_MERCHANT_ID
+
+    response = PayonusClient.get("/api/v1/transfer-requests", params=params)
+
+    return response

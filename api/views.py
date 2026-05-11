@@ -27,6 +27,7 @@ from .services.payments import (
     create_fixed_virtual_account,
     fetch_banks,
     fetch_mobile_money_networks,
+    fetch_transfer_requests,
     fund_sandbox_ngn_wallet,
     initiate_mobile_money_collection,
     list_fixed_virtual_accounts,
@@ -244,5 +245,40 @@ class FundSandboxWalletView(APIView):
         serializer.is_valid(raise_exception=True)
 
         response = fund_sandbox_ngn_wallet(serializer.validated_data)
+
+        return Response(response)
+
+
+class TransferRequestListView(APIView):
+
+    def get(self, request):
+
+        params = {}
+
+        query_fields = [
+            "merchantId",
+            "id",
+            "status",
+            "onusReference",
+            "accountNumber",
+            "merchantReference",
+            "businessIds",
+            "channel",
+            "transferType",
+            "currency",
+            "reversed",
+            "refund",
+            "createdFrom",
+            "createdTo",
+        ]
+
+        for field in query_fields:
+
+            value = request.query_params.get(field)
+
+            if value is not None:
+                params[field] = value
+
+        response = fetch_transfer_requests(params=params)
 
         return Response(response)

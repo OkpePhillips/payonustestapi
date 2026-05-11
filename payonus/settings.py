@@ -143,6 +143,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 PAYONUS_CLIENT_ID = config("PAYONUS_CLIENT_ID", default="")
+PAYONUS_MERCHANT_ID = config("PAYONUS_MERCHANT_ID", default="")
 PAYONUS_CLIENT_SECRET = config("PAYONUS_CLIENT_SECRET", default="")
 PAYONUS_BUSINESS_ID = config("PAYONUS_BUSINESS_ID", default="")
 PAYONUS_BASE_URL = config(

@@ -11,6 +11,7 @@ from .views import (
     MobileMoneyNetworksView,
     NameEnquiryView,
     PayonusWebhookView,
+    TransferRequestListView,
     VerifyMobileMoneyOTPView,
 )
 
@@ -61,5 +62,9 @@ urlpatterns = [
     path(
         "payouts/fund-wallet/",
         FundSandboxWalletView.as_view(),
+    ),
+    path(
+        "payouts/transfers/",
+        TransferRequestListView.as_view(),
     ),
 ]

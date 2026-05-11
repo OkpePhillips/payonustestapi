@@ -139,7 +139,7 @@ class VirtualAccount(TimeStampedModel):
     bank_name = models.CharField(max_length=255)
     onus_reference = models.CharField(max_length=255)
 
-    completion_url = models.URLField(blank=True, null=True)
+    completion_url = models.URLField(max_length=2000, blank=True, null=True)
 
     active = models.BooleanField(default=True)
 

@@ -11,6 +11,8 @@ from drf_yasg.utils import swagger_auto_schema
 from .models import WebhookLog
 from .serializers import (
     DynamicVirtualAccountSerializer,
+    MobileMoneyCollectionSerializer,
+    VerifyMobileMoneyOTPSerializer,
     VirtualAccountResponseSerializer,
     FixedVirtualAccountSerializer,
 )
@@ -18,7 +20,10 @@ from .serializers import (
 from .services.payments import (
     create_dynamic_virtual_account,
     create_fixed_virtual_account,
+    fetch_mobile_money_networks,
+    initiate_mobile_money_collection,
     list_fixed_virtual_accounts,
+    verify_mobile_money_otp,
 )
 
 
@@ -117,5 +122,40 @@ class FixedVirtualAccountListView(APIView):
             params["createdTo"] = created_to
 
         response = list_fixed_virtual_accounts(params=params)
+
+        return Response(response)
+
+
+class MobileMoneyCollectionView(APIView):
+
+    def post(self, request):
+
+        serializer = MobileMoneyCollectionSerializer(data=request.data)
+
+        serializer.is_valid(raise_exception=True)
+
+        response = initiate_mobile_money_collection(serializer.validated_data)
+
+        return Response(response)
+
+
+class VerifyMobileMoneyOTPView(APIView):
+
+    def post(self, request):
+
+        serializer = VerifyMobileMoneyOTPSerializer(data=request.data)
+
+        serializer.is_valid(raise_exception=True)
+
+        response = verify_mobile_money_otp(serializer.validated_data)
+
+        return Response(response)
+
+
+class MobileMoneyNetworksView(APIView):
+
+    def get(self, request):
+
+        response = fetch_mobile_money_networks()
 
         return Response(response)

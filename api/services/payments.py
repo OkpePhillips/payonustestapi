@@ -181,3 +181,96 @@ def list_fixed_virtual_accounts(params=None):
     )
 
     return response
+
+
+def initiate_mobile_money_collection(data):
+
+    customer_data = data["customer"]
+
+    address_data = customer_data.pop("address", {})
+
+    customer, _ = Customer.objects.get_or_create(
+        email=customer_data["email"], defaults=customer_data
+    )
+
+    for key, value in customer_data.items():
+        setattr(customer, key, value)
+
+    customer.save()
+
+    if address_data:
+
+        CustomerAddress.objects.update_or_create(
+            customer=customer, defaults=address_data
+        )
+
+    transaction = Transaction.objects.create(
+        customer=customer,
+        tx_type="payin",
+        channel="mobile_money",
+        amount=data["amount"],
+        currency="NGN",
+        country_code="NG",
+        status="processing",
+    )
+
+    payload = {
+        "customer": {
+            "name": customer.name,
+            "email": customer.email,
+            "phone": customer.phone,
+            "address": {
+                "postalCode": (address_data.get("postal_code")),
+                "countryCode": (address_data.get("country_code", "NG")),
+                "city": (address_data.get("city")),
+            },
+        },
+        "amount": str(data["amount"]),
+        "businessId": (settings.PAYONUS_BUSINESS_ID),
+        "reference": str(transaction.reference),
+        "narration": data["narration"],
+        "momoNetwork": data["momo_network"],
+    }
+
+    if data.get("initiating_code"):
+
+        payload["initiatingCode"] = data["initiating_code"]
+
+    response = PayonusClient.post("/api/v1/mobile-money/collection", payload)
+
+    response_data = response.get("data", {})
+
+    transaction.provider_response = response
+
+    transaction.provider_reference = response_data.get("onusReference")
+
+    transaction.status = response_data.get("paymentStatus", "processing").lower()
+
+    transaction.save()
+
+    return response
+
+
+def verify_mobile_money_otp(data):
+
+    payload = {
+        "businessId": (settings.PAYONUS_BUSINESS_ID),
+        "onusReference": data["onus_reference"],
+        "otp": data["otp"],
+    }
+
+    response = PayonusClient.post("/api/v1/mobile-money/collection/verify-otp", payload)
+
+    response_data = response.get("data", {})
+
+    Transaction.objects.filter(provider_reference=data["onus_reference"]).update(
+        provider_response=response,
+        status=response_data.get("paymentStatus", "processing").lower(),
+    )
+
+    return response
+
+
+def fetch_mobile_money_networks():
+
+    return PayonusClient.get("/api/v1/mobile-money/networks")

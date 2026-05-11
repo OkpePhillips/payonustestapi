@@ -77,3 +77,23 @@ class FixedVirtualAccountSerializer(serializers.Serializer):
     narration = serializers.CharField(required=False)
 
     notification_url = serializers.URLField(required=False)
+
+
+class MobileMoneyCollectionSerializer(serializers.Serializer):
+
+    customer = CustomerSerializer()
+
+    amount = serializers.DecimalField(max_digits=12, decimal_places=2)
+
+    narration = serializers.CharField()
+
+    momo_network = serializers.CharField()
+
+    initiating_code = serializers.CharField(required=False, allow_blank=True)
+
+
+class VerifyMobileMoneyOTPSerializer(serializers.Serializer):
+
+    onus_reference = serializers.CharField()
+
+    otp = serializers.CharField()

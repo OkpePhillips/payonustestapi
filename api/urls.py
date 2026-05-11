@@ -4,7 +4,10 @@ from .views import (
     CreateDynamicVirtualAccountView,
     CreateFixedVirtualAccountView,
     FixedVirtualAccountListView,
+    MobileMoneyCollectionView,
+    MobileMoneyNetworksView,
     PayonusWebhookView,
+    VerifyMobileMoneyOTPView,
 )
 
 urlpatterns = [
@@ -26,5 +29,17 @@ urlpatterns = [
     path(
         "payments/fixed-accounts/",
         FixedVirtualAccountListView.as_view(),
+    ),
+    path(
+        "payments/mobile-money/",
+        MobileMoneyCollectionView.as_view(),
+    ),
+    path(
+        "payments/mobile-money/verify-otp/",
+        VerifyMobileMoneyOTPView.as_view(),
+    ),
+    path(
+        "payments/mobile-money/networks/",
+        MobileMoneyNetworksView.as_view(),
     ),
 ]

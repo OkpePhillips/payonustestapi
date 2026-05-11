@@ -129,23 +129,19 @@ def create_fixed_virtual_account(data):
             "phone": customer.phone,
             "externalId": customer.external_id,
             "bvn": customer.bvn,
+            "address": {
+                "line1": address_data.get("line1"),
+                "line2": address_data.get("line2"),
+                "city": address_data.get("city"),
+                "state": address_data.get("state"),
+                "postalCode": address_data.get("postal_code"),
+                "countryCode": address_data.get("country_code"),
+            },
         },
-        "dob": (customer.dob.strftime("%Y-%m-%d") if customer.dob else None),
+        "dob": (customer.dob.strftime("%Y-%m-%d")),
         "businessId": (settings.PAYONUS_BUSINESS_ID),
         "reference": str(transaction.reference),
     }
-
-    # address
-    if address_data:
-
-        payload["customer"]["address"] = {
-            "line1": address_data.get("line1"),
-            "line2": address_data.get("line2"),
-            "city": address_data.get("city"),
-            "state": address_data.get("state"),
-            "postalCode": address_data.get("postal_code"),
-            "countryCode": address_data.get("country_code"),
-        }
 
     if data.get("notification_url"):
 
@@ -158,6 +154,7 @@ def create_fixed_virtual_account(data):
     response = PayonusClient.post("/api/v1/virtual-accounts/fixed-account", payload)
 
     response_data = response.get("data", {})
+    print(response_data)
 
     transaction.provider_response = response
 

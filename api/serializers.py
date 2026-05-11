@@ -78,8 +78,6 @@ class FixedVirtualAccountSerializer(serializers.Serializer):
 
     customer = CustomerSerializer()
 
-    reference = serializers.CharField(required=False)
-
     narration = serializers.CharField(required=False)
 
     notification_url = serializers.URLField(required=False)

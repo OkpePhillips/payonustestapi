@@ -157,7 +157,6 @@ class VerifyMobileMoneyOTPView(APIView):
         operation_summary=("Mobile money payment otp verification"),
         operation_description=("Verify otp for mobile money payment."),
     )
-
     def post(self, request):
 
         serializer = VerifyMobileMoneyOTPSerializer(data=request.data)
@@ -191,6 +190,12 @@ class BankListView(APIView):
 
 class NameEnquiryView(APIView):
 
+    @swagger_auto_schema(
+        request_body=(NameEnquirySerializer),
+        responses={201: (NameEnquirySerializer)},
+        operation_summary=("Name enquiry"),
+        operation_description=("Confirm bank name before making transfer"),
+    )
     def post(self, request):
 
         serializer = NameEnquirySerializer(data=request.data)

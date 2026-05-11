@@ -33,6 +33,7 @@ class CreateDynamicVirtualAccountView(APIView):
         serializer = DynamicVirtualAccountSerializer(data=request.data)
 
         serializer.is_valid(raise_exception=True)
+        print(serializer.validated_data)
 
         virtual_account = create_dynamic_virtual_account(serializer.validated_data)
 

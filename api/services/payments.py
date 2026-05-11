@@ -286,3 +286,15 @@ def fetch_banks(currency=None):
     response = PayonusClient.get("/api/v1/banks", params=params)
 
     return response
+
+
+def fund_sandbox_ngn_wallet(data):
+
+    payload = {
+        "accountNumber": data["account_number"],
+        "amount": float(data["amount"]),
+    }
+
+    response = PayonusClient.post("/api/v1/fund-ngn-account", payload)
+
+    return response

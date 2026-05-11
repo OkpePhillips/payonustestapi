@@ -6,6 +6,7 @@ from .views import (
     CreateDynamicVirtualAccountView,
     CreateFixedVirtualAccountView,
     FixedVirtualAccountListView,
+    FundSandboxWalletView,
     MobileMoneyCollectionView,
     MobileMoneyNetworksView,
     NameEnquiryView,
@@ -56,5 +57,9 @@ urlpatterns = [
     path(
         "payouts/bank-transfer/",
         BankTransferView.as_view(),
+    ),
+    path(
+        "payouts/fund-wallet/",
+        FundSandboxWalletView.as_view(),
     ),
 ]

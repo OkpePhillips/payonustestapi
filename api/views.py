@@ -14,6 +14,7 @@ from .models import WebhookLog
 from .serializers import (
     BankTransferSerializer,
     DynamicVirtualAccountSerializer,
+    FundSandboxWalletSerializer,
     MobileMoneyCollectionSerializer,
     NameEnquirySerializer,
     VerifyMobileMoneyOTPSerializer,
@@ -26,6 +27,7 @@ from .services.payments import (
     create_fixed_virtual_account,
     fetch_banks,
     fetch_mobile_money_networks,
+    fund_sandbox_ngn_wallet,
     initiate_mobile_money_collection,
     list_fixed_virtual_accounts,
     verify_mobile_money_otp,
@@ -223,5 +225,24 @@ class BankTransferView(APIView):
         serializer.is_valid(raise_exception=True)
 
         response = initiate_bank_transfer(serializer.validated_data)
+
+        return Response(response)
+
+
+class FundSandboxWalletView(APIView):
+
+    @swagger_auto_schema(
+        request_body=(FundSandboxWalletSerializer),
+        responses={201: (FundSandboxWalletSerializer)},
+        operation_summary=("Fund Sandbox"),
+        operation_description=("Funding the sandbox to be able to test transfer"),
+    )
+    def post(self, request):
+
+        serializer = FundSandboxWalletSerializer(data=request.data)
+
+        serializer.is_valid(raise_exception=True)
+
+        response = fund_sandbox_ngn_wallet(serializer.validated_data)
 
         return Response(response)

@@ -129,3 +129,10 @@ class BankTransferSerializer(serializers.Serializer):
     notification_url = serializers.URLField(required=False)
 
     transfer_type = serializers.CharField(default="WALLET_TO_BANK_ACCOUNT")
+
+
+class FundSandboxWalletSerializer(serializers.Serializer):
+
+    account_number = serializers.CharField()
+
+    amount = serializers.DecimalField(max_digits=12, decimal_places=2)

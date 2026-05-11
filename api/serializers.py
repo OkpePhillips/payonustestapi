@@ -45,14 +45,9 @@ class CustomerSerializer(serializers.ModelSerializer):
 class DynamicVirtualAccountSerializer(serializers.Serializer):
 
     amount = serializers.DecimalField(max_digits=15, decimal_places=2)
-
     customer = CustomerSerializer()
-
-    payment_channel = serializers.CharField(required=False, default="BANK_TRANSFER")
-
-    wallet_type = serializers.CharField(required=False)
-
-    redirect_url = serializers.URLField(required=False)
+    reference = serializers.CharField()
+    businessId = serializers.CharField()
 
 
 class VirtualAccountResponseSerializer(serializers.ModelSerializer):

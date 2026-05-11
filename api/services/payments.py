@@ -63,6 +63,8 @@ def create_dynamic_virtual_account(data):
 
         payload["redirectUrl"] = data.get("redirect_url")
 
+    print(payload)
+
     response = PayonusClient.post("/api/v1/virtual-accounts/dynamic", payload)
 
     response_data = response.get("data", {})

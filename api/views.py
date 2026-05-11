@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from django.conf import settings
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -15,7 +15,10 @@ from .serializers import (
     FixedVirtualAccountSerializer,
 )
 
-from .services.payments import create_dynamic_virtual_account, create_fixed_virtual_account
+from .services.payments import (
+    create_dynamic_virtual_account,
+    create_fixed_virtual_account,
+)
 
 
 class CreateDynamicVirtualAccountView(APIView):
@@ -33,7 +36,8 @@ class CreateDynamicVirtualAccountView(APIView):
         serializer = DynamicVirtualAccountSerializer(data=request.data)
 
         serializer.is_valid(raise_exception=True)
-        
+
+        data = serializer.validated_data
 
         virtual_account = create_dynamic_virtual_account(serializer.validated_data)
 

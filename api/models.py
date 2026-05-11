@@ -206,6 +206,14 @@ class Payout(TimeStampedModel):
         ("WALLET_TO_EFT", "Wallet to EFT"),
     )
 
+    STATUS_CHOICES = (
+        ("pending", "Pending"),
+        ("processing", "Processing"),
+        ("successful", "Successful"),
+        ("failed", "Failed"),
+        ("rejected", "Rejected"),
+    )
+
     transaction = models.OneToOneField(
         Transaction, on_delete=models.CASCADE, related_name="payout"
     )
@@ -213,12 +221,15 @@ class Payout(TimeStampedModel):
     beneficiary = models.ForeignKey(
         Beneficiary, on_delete=models.SET_NULL, null=True, blank=True
     )
+    provider_reference = models.CharField(max_length=255, blank=True, null=True)
 
     transfer_type = models.CharField(max_length=50, choices=TRANSFER_TYPES)
 
     fee = models.DecimalField(max_digits=12, decimal_places=2, default=0)
 
-    payment_status = models.CharField(max_length=50, default="PENDING")
+    payment_status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES, default="pending"
+    )
 
     notification_url = models.URLField(blank=True, null=True)
 

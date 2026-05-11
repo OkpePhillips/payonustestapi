@@ -9,9 +9,10 @@ from rest_framework.decorators import permission_classes
 
 from drf_yasg.utils import swagger_auto_schema
 
-from api.services.payouts import perform_name_enquiry
+from api.services.payouts import initiate_bank_transfer, perform_name_enquiry
 from .models import WebhookLog
 from .serializers import (
+    BankTransferSerializer,
     DynamicVirtualAccountSerializer,
     MobileMoneyCollectionSerializer,
     NameEnquirySerializer,
@@ -203,5 +204,24 @@ class NameEnquiryView(APIView):
         serializer.is_valid(raise_exception=True)
 
         response = perform_name_enquiry(serializer.validated_data)
+
+        return Response(response)
+
+
+class BankTransferView(APIView):
+
+    @swagger_auto_schema(
+        request_body=(BankTransferSerializer),
+        responses={201: (BankTransferSerializer)},
+        operation_summary=("Bank Transfer"),
+        operation_description=("Initiating bank transfer"),
+    )
+    def post(self, request):
+
+        serializer = BankTransferSerializer(data=request.data)
+
+        serializer.is_valid(raise_exception=True)
+
+        response = initiate_bank_transfer(serializer.validated_data)
 
         return Response(response)

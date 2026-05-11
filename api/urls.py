@@ -2,6 +2,7 @@ from django.urls import path
 
 from .views import (
     BankListView,
+    BankTransferView,
     CreateDynamicVirtualAccountView,
     CreateFixedVirtualAccountView,
     FixedVirtualAccountListView,
@@ -51,5 +52,9 @@ urlpatterns = [
     path(
         "payouts/name-enquiry/",
         NameEnquiryView.as_view(),
+    ),
+    path(
+        "payouts/bank-transfer/",
+        BankTransferView.as_view(),
     ),
 ]

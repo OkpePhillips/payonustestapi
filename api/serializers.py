@@ -106,3 +106,26 @@ class NameEnquirySerializer(serializers.Serializer):
     account_number = serializers.CharField()
 
     currency = serializers.CharField(required=False, default="NGN")
+
+
+class BankTransferSerializer(serializers.Serializer):
+
+    amount = serializers.DecimalField(max_digits=12, decimal_places=2)
+
+    beneficiary_account_number = serializers.CharField()
+
+    beneficiary_account_name = serializers.CharField()
+
+    beneficiary_bank_code = serializers.CharField()
+
+    currency = serializers.CharField(default="NGN")
+
+    country_code = serializers.CharField(default="NG")
+
+    email = serializers.EmailField()
+
+    narration = serializers.CharField(required=False, allow_blank=True)
+
+    notification_url = serializers.URLField(required=False)
+
+    transfer_type = serializers.CharField(default="WALLET_TO_BANK_ACCOUNT")

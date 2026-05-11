@@ -54,6 +54,12 @@ class DynamicVirtualAccountSerializer(serializers.Serializer):
 
     redirect_url = serializers.URLField(required=False)
 
+    wallet_type = serializers.ChoiceField(choices=["OPAY", "PALMPAY"], required=False)
+
+    payment_channel = serializers.CharField(required=False)
+
+    redirect_url = serializers.URLField(required=False)
+
 
 class VirtualAccountResponseSerializer(serializers.ModelSerializer):
 
@@ -62,17 +68,7 @@ class VirtualAccountResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = VirtualAccount
 
-        fields = [
-            "id",
-            "account_type",
-            "account_name",
-            "account_number",
-            "bank_name",
-            "completion_url",
-            "transaction_reference",
-            "created_at",
-        ]
-
+        fields = fields = "__all__"
 
 class FixedVirtualAccountSerializer(serializers.Serializer):
 

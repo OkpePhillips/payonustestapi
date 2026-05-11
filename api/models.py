@@ -18,28 +18,13 @@ class Customer(TimeStampedModel):
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=30)
 
-    external_id = models.CharField(
-        max_length=120,
-        blank=True,
-        null=True
-    )
+    external_id = models.CharField(max_length=120, blank=True, null=True)
 
-    nin = models.CharField(
-        max_length=20,
-        blank=True,
-        null=True
-    )
+    nin = models.CharField(max_length=20, blank=True, null=True)
 
-    bvn = models.CharField(
-        max_length=20,
-        blank=True,
-        null=True
-    )
+    bvn = models.CharField(max_length=20, blank=True, null=True)
 
-    dob = models.DateField(
-        blank=True,
-        null=True
-    )
+    dob = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} ({self.email})"
@@ -47,40 +32,19 @@ class Customer(TimeStampedModel):
 
 class CustomerAddress(TimeStampedModel):
     customer = models.OneToOneField(
-        Customer,
-        on_delete=models.CASCADE,
-        related_name="address"
+        Customer, on_delete=models.CASCADE, related_name="address"
     )
 
     line1 = models.CharField(max_length=255)
-    line2 = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True
-    )
+    line2 = models.CharField(max_length=255, blank=True, null=True)
 
-    city = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True
-    )
+    city = models.CharField(max_length=100, blank=True, null=True)
 
-    state = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True
-    )
+    state = models.CharField(max_length=100, blank=True, null=True)
 
-    postal_code = models.CharField(
-        max_length=20,
-        blank=True,
-        null=True
-    )
+    postal_code = models.CharField(max_length=20, blank=True, null=True)
 
-    country_code = models.CharField(
-        max_length=2,
-        default="NG"
-    )
+    country_code = models.CharField(max_length=2, default="NG")
 
     def __str__(self):
         return f"{self.customer.name} Address"
@@ -121,56 +85,26 @@ class Transaction(TimeStampedModel):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name="transactions"
+        related_name="transactions",
     )
 
-    reference = models.UUIDField(
-        default=uuid.uuid4,
-        unique=True,
-        editable=False
-    )
+    reference = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
 
-    onus_reference = models.CharField(
-        max_length=120,
-        blank=True,
-        null=True
-    )
+    onus_reference = models.CharField(max_length=120, blank=True, null=True)
 
-    tx_type = models.CharField(
-        max_length=20,
-        choices=TYPE_CHOICES
-    )
+    tx_type = models.CharField(max_length=20, choices=TYPE_CHOICES)
 
-    channel = models.CharField(
-        max_length=50,
-        choices=CHANNEL_CHOICES
-    )
+    channel = models.CharField(max_length=50, choices=CHANNEL_CHOICES)
 
-    amount = models.DecimalField(
-        max_digits=15,
-        decimal_places=2
-    )
+    amount = models.DecimalField(max_digits=15, decimal_places=2)
 
-    currency = models.CharField(
-        max_length=10,
-        default="NGN"
-    )
+    currency = models.CharField(max_length=10, default="NGN")
 
-    country_code = models.CharField(
-        max_length=5,
-        default="NG"
-    )
+    country_code = models.CharField(max_length=5, default="NG")
 
-    status = models.CharField(
-        max_length=20,
-        choices=STATUS_CHOICES,
-        default="pending"
-    )
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
 
-    provider_response = models.JSONField(
-        default=dict,
-        blank=True
-    )
+    provider_response = models.JSONField(default=dict, blank=True)
 
     def __str__(self):
         return str(self.reference)
@@ -191,35 +125,25 @@ class VirtualAccount(TimeStampedModel):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name="virtual_account"
+        related_name="virtual_account",
     )
 
     customer = models.ForeignKey(
-        Customer,
-        on_delete=models.CASCADE,
-        related_name="virtual_accounts"
+        Customer, on_delete=models.CASCADE, related_name="virtual_accounts"
     )
 
-    account_type = models.CharField(
-        max_length=20,
-        choices=ACCOUNT_TYPES
-    )
+    account_type = models.CharField(max_length=20, choices=ACCOUNT_TYPES)
 
     account_name = models.CharField(max_length=255)
     account_number = models.CharField(max_length=100)
     bank_name = models.CharField(max_length=255)
+    onus_reference = models.CharField(max_length=255)
 
-    completion_url = models.URLField(
-        blank=True,
-        null=True
-    )
+    completion_url = models.URLField(blank=True, null=True)
 
     active = models.BooleanField(default=True)
 
-    metadata = models.JSONField(
-        default=dict,
-        blank=True
-    )
+    metadata = models.JSONField(default=dict, blank=True)
 
     def __str__(self):
         return f"{self.account_number} - {self.bank_name}"
@@ -227,35 +151,20 @@ class VirtualAccount(TimeStampedModel):
 
 class MobileMoneyPayment(TimeStampedModel):
     transaction = models.OneToOneField(
-        Transaction,
-        on_delete=models.CASCADE,
-        related_name="mobile_money"
+        Transaction, on_delete=models.CASCADE, related_name="mobile_money"
     )
 
     network = models.CharField(max_length=100)
 
-    mobile_number = models.CharField(
-        max_length=30
-    )
+    mobile_number = models.CharField(max_length=30)
 
-    otp_required = models.BooleanField(
-        default=False
-    )
+    otp_required = models.BooleanField(default=False)
 
-    otp_verified = models.BooleanField(
-        default=False
-    )
+    otp_verified = models.BooleanField(default=False)
 
-    initiating_code = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True
-    )
+    initiating_code = models.CharField(max_length=100, blank=True, null=True)
 
-    payment_status = models.CharField(
-        max_length=50,
-        default="PROCESSING"
-    )
+    payment_status = models.CharField(max_length=50, default="PROCESSING")
 
     def __str__(self):
         return self.mobile_number
@@ -267,52 +176,23 @@ class MobileMoneyPayment(TimeStampedModel):
 class Beneficiary(TimeStampedModel):
     name = models.CharField(max_length=255)
 
-    email = models.EmailField(
-        blank=True,
-        null=True
-    )
+    email = models.EmailField(blank=True, null=True)
 
-    phone = models.CharField(
-        max_length=30,
-        blank=True,
-        null=True
-    )
+    phone = models.CharField(max_length=30, blank=True, null=True)
 
     account_number = models.CharField(max_length=50)
 
-    bank_code = models.CharField(
-        max_length=50,
-        blank=True,
-        null=True
-    )
+    bank_code = models.CharField(max_length=50, blank=True, null=True)
 
-    bank_name = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True
-    )
+    bank_name = models.CharField(max_length=255, blank=True, null=True)
 
-    country_code = models.CharField(
-        max_length=5,
-        default="NG"
-    )
+    country_code = models.CharField(max_length=5, default="NG")
 
-    currency = models.CharField(
-        max_length=10,
-        default="NGN"
-    )
+    currency = models.CharField(max_length=10, default="NGN")
 
-    momo_network = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True
-    )
+    momo_network = models.CharField(max_length=100, blank=True, null=True)
 
-    eft_bank = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True
-    )
+    eft_bank = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -327,99 +207,49 @@ class Payout(TimeStampedModel):
     )
 
     transaction = models.OneToOneField(
-        Transaction,
-        on_delete=models.CASCADE,
-        related_name="payout"
+        Transaction, on_delete=models.CASCADE, related_name="payout"
     )
 
     beneficiary = models.ForeignKey(
-        Beneficiary,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True
+        Beneficiary, on_delete=models.SET_NULL, null=True, blank=True
     )
 
-    transfer_type = models.CharField(
-        max_length=50,
-        choices=TRANSFER_TYPES
-    )
+    transfer_type = models.CharField(max_length=50, choices=TRANSFER_TYPES)
 
-    fee = models.DecimalField(
-        max_digits=12,
-        decimal_places=2,
-        default=0
-    )
+    fee = models.DecimalField(max_digits=12, decimal_places=2, default=0)
 
-    payment_status = models.CharField(
-        max_length=50,
-        default="PENDING"
-    )
+    payment_status = models.CharField(max_length=50, default="PENDING")
 
-    notification_url = models.URLField(
-        blank=True,
-        null=True
-    )
+    notification_url = models.URLField(blank=True, null=True)
 
-    narration = models.TextField(
-        blank=True,
-        null=True
-    )
+    narration = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return str(self.transaction.reference)
 
 
 class BulkTransfer(TimeStampedModel):
-    reference = models.CharField(
-        max_length=120,
-        unique=True
-    )
+    reference = models.CharField(max_length=120, unique=True)
 
-    business_id = models.CharField(
-        max_length=120
-    )
+    business_id = models.CharField(max_length=120)
 
-    transfer_type = models.CharField(
-        max_length=50
-    )
+    transfer_type = models.CharField(max_length=50)
 
-    country_code = models.CharField(
-        max_length=5
-    )
+    country_code = models.CharField(max_length=5)
 
-    currency = models.CharField(
-        max_length=10
-    )
+    currency = models.CharField(max_length=10)
 
-    description = models.TextField(
-        blank=True,
-        null=True
-    )
+    description = models.TextField(blank=True, null=True)
 
-    notification_url = models.URLField(
-        blank=True,
-        null=True
-    )
+    notification_url = models.URLField(blank=True, null=True)
 
-    momo_network = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True
-    )
+    momo_network = models.CharField(max_length=100, blank=True, null=True)
 
-    csv_file = models.FileField(
-        upload_to="bulk_transfers/"
-    )
+    csv_file = models.FileField(upload_to="bulk_transfers/")
 
-    status = models.CharField(
-        max_length=50,
-        default="pending"
-    )
+    status = models.CharField(max_length=50, default="pending")
 
-    response_payload = models.JSONField(
-        default=dict,
-        blank=True
-    )
+    response_payload = models.JSONField(default=dict, blank=True)
 
     def __str__(self):
         return self.reference
@@ -427,34 +257,20 @@ class BulkTransfer(TimeStampedModel):
 
 class BulkTransferItem(TimeStampedModel):
     bulk_transfer = models.ForeignKey(
-        BulkTransfer,
-        on_delete=models.CASCADE,
-        related_name="items"
+        BulkTransfer, on_delete=models.CASCADE, related_name="items"
     )
 
     beneficiary_name = models.CharField(max_length=255)
     account_number = models.CharField(max_length=50)
     bank_code = models.CharField(max_length=50)
 
-    amount = models.DecimalField(
-        max_digits=15,
-        decimal_places=2
-    )
+    amount = models.DecimalField(max_digits=15, decimal_places=2)
 
-    email = models.EmailField(
-        blank=True,
-        null=True
-    )
+    email = models.EmailField(blank=True, null=True)
 
-    description = models.TextField(
-        blank=True,
-        null=True
-    )
+    description = models.TextField(blank=True, null=True)
 
-    status = models.CharField(
-        max_length=50,
-        default="pending"
-    )
+    status = models.CharField(max_length=50, default="pending")
 
     def __str__(self):
         return self.beneficiary_name
@@ -464,64 +280,32 @@ class BulkTransferItem(TimeStampedModel):
 # WALLETS
 # =========================
 class Wallet(TimeStampedModel):
-    wallet_id = models.CharField(
-        max_length=120,
-        unique=True
-    )
+    wallet_id = models.CharField(max_length=120, unique=True)
 
-    business_id = models.CharField(
-        max_length=120
-    )
+    business_id = models.CharField(max_length=120)
 
     currency = models.CharField(max_length=10)
     status = models.CharField(max_length=50)
 
-    available_balance = models.DecimalField(
-        max_digits=20,
-        decimal_places=2,
-        default=0
-    )
+    available_balance = models.DecimalField(max_digits=20, decimal_places=2, default=0)
 
-    lien_amount = models.DecimalField(
-        max_digits=20,
-        decimal_places=2,
-        default=0
-    )
+    lien_amount = models.DecimalField(max_digits=20, decimal_places=2, default=0)
 
-    purpose = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True
-    )
+    purpose = models.CharField(max_length=100, blank=True, null=True)
 
-    wallet_name = models.CharField(
-        max_length=255
-    )
+    wallet_name = models.CharField(max_length=255)
 
-    business_name = models.CharField(
-        max_length=255
-    )
+    business_name = models.CharField(max_length=255)
 
-    merchant_name = models.CharField(
-        max_length=255
-    )
+    merchant_name = models.CharField(max_length=255)
 
-    aggregator_wallet = models.BooleanField(
-        default=False
-    )
+    aggregator_wallet = models.BooleanField(default=False)
 
-    payout_allowed = models.BooleanField(
-        default=True
-    )
+    payout_allowed = models.BooleanField(default=True)
 
-    active = models.BooleanField(
-        default=True
-    )
+    active = models.BooleanField(default=True)
 
-    raw_response = models.JSONField(
-        default=dict,
-        blank=True
-    )
+    raw_response = models.JSONField(default=dict, blank=True)
 
     def __str__(self):
         return f"{self.wallet_name} ({self.currency})"
@@ -529,16 +313,11 @@ class Wallet(TimeStampedModel):
 
 class WalletTransaction(TimeStampedModel):
     wallet = models.ForeignKey(
-        Wallet,
-        on_delete=models.CASCADE,
-        related_name="transactions"
+        Wallet, on_delete=models.CASCADE, related_name="transactions"
     )
 
     transaction = models.ForeignKey(
-        Transaction,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True
+        Transaction, on_delete=models.SET_NULL, null=True, blank=True
     )
 
     product = models.CharField(max_length=50)
@@ -546,27 +325,16 @@ class WalletTransaction(TimeStampedModel):
     transaction_type = models.CharField(max_length=50)
     transaction_status = models.CharField(max_length=50)
 
-    amount = models.DecimalField(
-        max_digits=20,
-        decimal_places=2
-    )
+    amount = models.DecimalField(max_digits=20, decimal_places=2)
 
-    onus_reference = models.CharField(
-        max_length=120
-    )
+    onus_reference = models.CharField(max_length=120)
 
-    narration = models.TextField(
-        blank=True,
-        null=True
-    )
+    narration = models.TextField(blank=True, null=True)
 
     reversal = models.BooleanField(default=False)
     fee = models.BooleanField(default=False)
 
-    raw_response = models.JSONField(
-        default=dict,
-        blank=True
-    )
+    raw_response = models.JSONField(default=dict, blank=True)
 
     def __str__(self):
         return self.onus_reference
@@ -576,18 +344,12 @@ class WalletTransaction(TimeStampedModel):
 # WEBHOOKS
 # =========================
 class WebhookLog(TimeStampedModel):
-    event_type = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True
-    )
+    event_type = models.CharField(max_length=100, blank=True, null=True)
 
     payload = models.JSONField(default=dict)
     signature = models.TextField()
 
-    processed = models.BooleanField(
-        default=False
-    )
+    processed = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Webhook {self.id}"

@@ -54,14 +54,23 @@ def create_dynamic_virtual_account(data):
         },
     }
 
+    if data.get("wallet_type"):
+        payload["walletType"] = data["wallet_type"]
+
+    if data.get("payment_channel"):
+        payload["paymentChannel"] = data["payment_channel"]
+
+    if data.get("redirect_url"):
+        payload["redirectUrl"] = data["redirect_url"]
+
     # wallet payment option
-    if data.get("payment_channel") == "PAY_WITH_WALLET":
+    # if data.get("payment_channel") == "PAY_WITH_WALLET":
 
-        payload["walletType"] = data.get("wallet_type")
+    #     payload["walletType"] = data.get("wallet_type")
 
-        payload["paymentChannel"] = "PAY_WITH_WALLET"
+    #     payload["paymentChannel"] = "PAY_WITH_WALLET"
 
-        payload["redirectUrl"] = data.get("redirect_url")
+    #     payload["redirectUrl"] = data.get("redirect_url")
 
     response = PayonusClient.post("/api/v1/virtual-accounts/dynamic", payload)
 

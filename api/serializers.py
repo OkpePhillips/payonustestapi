@@ -166,3 +166,11 @@ class EFTPayoutSerializer(serializers.Serializer):
     narration = serializers.CharField(required=False, allow_blank=True)
 
     notification_url = serializers.URLField(required=False)
+
+
+class WalletTransferSerializer(serializers.Serializer):
+    beneficiary_business_id = serializers.CharField()
+    amount = serializers.DecimalField(max_digits=12, decimal_places=2)
+    country_code = serializers.CharField(default="NG")
+    currency = serializers.CharField(default="NGN")
+    narration = serializers.CharField(default="Wallet transfer")

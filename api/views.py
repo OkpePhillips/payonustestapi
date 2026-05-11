@@ -16,6 +16,7 @@ from api.services.payouts import (
     initiate_mobile_money_payout,
     perform_name_enquiry,
 )
+from api.services.wallets import fetch_wallet_transactions, fetch_wallets, wallet_to_wallet_transfer
 from .models import WebhookLog
 from .serializers import (
     BankTransferSerializer,
@@ -28,6 +29,7 @@ from .serializers import (
     VerifyMobileMoneyOTPSerializer,
     VirtualAccountResponseSerializer,
     FixedVirtualAccountSerializer,
+    WalletTransferSerializer,
 )
 
 from .services.payments import (
@@ -337,4 +339,65 @@ class EFTPayoutView(APIView):
 
         response = initiate_eft_payout(serializer.validated_data)
 
+        return Response(response)
+
+
+class WalletListView(APIView):
+    def get(self, request):
+        response = fetch_wallets()
+        return Response(response)
+
+
+class WalletTransferView(APIView):
+
+    @swagger_auto_schema(
+        request_body=(WalletTransferSerializer),
+        responses={201: (WalletTransferSerializer)},
+        operation_summary=("EFT payout"),
+        operation_description=("Payout with eft"),
+    )
+    def post(self, request):
+        serializer = WalletTransferSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        response = wallet_to_wallet_transfer(serializer.validated_data)
+        return Response(response)
+
+
+class WalletTransactionListView(APIView):
+
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                "parameter_name",
+                openapi.IN_QUERY,
+                description="A description of what this optional param does",
+                type=openapi.TYPE_STRING,
+                required=False,  # This makes it optional
+            ),
+        ],
+        responses={201: (FundSandboxWalletSerializer)},
+        operation_summary=("Fund Sandbox"),
+        operation_description=("Funding the sandbox to be able to test transfer"),
+    )
+    def get(self, request):
+        allowed_params = [
+            "pageNo",
+            "pageSize",
+            "createdFrom",
+            "createdTo",
+            "transactionType",
+            "currency",
+            "onusReference",
+            "product",
+        ]
+
+        params = {}
+
+        for field in allowed_params:
+            value = request.query_params.get(field)
+            if value:
+                params[field] = value
+
+        response = fetch_wallet_transactions(params)
         return Response(response)

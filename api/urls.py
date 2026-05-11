@@ -15,6 +15,9 @@ from .views import (
     PayonusWebhookView,
     TransferRequestListView,
     VerifyMobileMoneyOTPView,
+    WalletListView,
+    WalletTransactionListView,
+    WalletTransferView,
 )
 
 urlpatterns = [
@@ -77,4 +80,7 @@ urlpatterns = [
         "payouts/eft/",
         EFTPayoutView.as_view(),
     ),
+    path("wallets/", WalletListView.as_view()),
+    path("wallets/transfer/", WalletTransferView.as_view()),
+    path("wallets/transactions/", WalletTransactionListView.as_view()),
 ]

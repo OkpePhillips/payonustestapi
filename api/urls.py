@@ -7,6 +7,7 @@ from .views import (
     FixedVirtualAccountListView,
     MobileMoneyCollectionView,
     MobileMoneyNetworksView,
+    NameEnquiryView,
     PayonusWebhookView,
     VerifyMobileMoneyOTPView,
 )
@@ -46,5 +47,9 @@ urlpatterns = [
     path(
         "payouts/banks/",
         BankListView.as_view(),
+    ),
+    path(
+        "payouts/name-enquiry/",
+        NameEnquiryView.as_view(),
     ),
 ]

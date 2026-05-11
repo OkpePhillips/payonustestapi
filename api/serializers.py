@@ -97,3 +97,12 @@ class VerifyMobileMoneyOTPSerializer(serializers.Serializer):
     onus_reference = serializers.CharField()
 
     otp = serializers.CharField()
+
+
+class NameEnquirySerializer(serializers.Serializer):
+
+    institution_code = serializers.CharField()
+
+    account_number = serializers.CharField()
+
+    currency = serializers.CharField(required=False, default="NGN")

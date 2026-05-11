@@ -8,10 +8,13 @@ from rest_framework.permissions import AllowAny
 from rest_framework.decorators import permission_classes
 
 from drf_yasg.utils import swagger_auto_schema
+
+from api.services.payouts import perform_name_enquiry
 from .models import WebhookLog
 from .serializers import (
     DynamicVirtualAccountSerializer,
     MobileMoneyCollectionSerializer,
+    NameEnquirySerializer,
     VerifyMobileMoneyOTPSerializer,
     VirtualAccountResponseSerializer,
     FixedVirtualAccountSerializer,
@@ -182,5 +185,18 @@ class BankListView(APIView):
         currency = request.query_params.get("currency")
 
         response = fetch_banks(currency=currency)
+
+        return Response(response)
+
+
+class NameEnquiryView(APIView):
+
+    def post(self, request):
+
+        serializer = NameEnquirySerializer(data=request.data)
+
+        serializer.is_valid(raise_exception=True)
+
+        response = perform_name_enquiry(serializer.validated_data)
 
         return Response(response)

@@ -128,6 +128,12 @@ class FixedVirtualAccountListView(APIView):
 
 class MobileMoneyCollectionView(APIView):
 
+    @swagger_auto_schema(
+        request_body=(MobileMoneyCollectionSerializer),
+        responses={201: (MobileMoneyCollectionSerializer)},
+        operation_summary=("Mobile money payment collection"),
+        operation_description=("Collect money using mobile money."),
+    )
     def post(self, request):
 
         serializer = MobileMoneyCollectionSerializer(data=request.data)
@@ -140,6 +146,13 @@ class MobileMoneyCollectionView(APIView):
 
 
 class VerifyMobileMoneyOTPView(APIView):
+
+    @swagger_auto_schema(
+        request_body=(VerifyMobileMoneyOTPSerializer),
+        responses={201: (VerifyMobileMoneyOTPSerializer)},
+        operation_summary=("Mobile money payment otp verification"),
+        operation_description=("Verify otp for mobile money payment."),
+    )
 
     def post(self, request):
 

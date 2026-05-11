@@ -1,3 +1,14 @@
 from django.urls import path
 
-urlpatterns = []
+from .views import (
+    CreateDynamicVirtualAccountView,
+)
+
+
+urlpatterns = [
+    path(
+        "payments/dynamic-account/",
+        CreateDynamicVirtualAccountView.as_view(),
+        name="dynamic-account",
+    ),
+]

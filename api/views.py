@@ -3,7 +3,7 @@ from django.conf import settings
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import permission_classes
 
@@ -12,6 +12,7 @@ from drf_yasg import openapi
 
 from api.services.payouts import (
     initiate_bank_transfer,
+    initiate_bulk_bank_transfer,
     initiate_eft_payout,
     initiate_mobile_money_payout,
     perform_name_enquiry,
@@ -25,6 +26,7 @@ from api.services.webhooks import process_payonus_webhook, verify_webhook_signat
 from .models import WebhookLog
 from .serializers import (
     BankTransferSerializer,
+    BulkTransferSerializer,
     DynamicVirtualAccountSerializer,
     EFTPayoutSerializer,
     FundSandboxWalletSerializer,
@@ -527,5 +529,17 @@ class VerifySinglePaymentView(APIView):
         serializer.is_valid(raise_exception=True)
 
         response = verify_single_payment(serializer.validated_data)
+
+        return Response(response)
+
+
+class BulkTransferView(APIView):
+    parser_classes = [MultiPartParser, FormParser]
+
+    def post(self, request):
+        serializer = BulkTransferSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        response = initiate_bulk_bank_transfer(serializer.validated_data)
 
         return Response(response)

@@ -3,6 +3,7 @@ from django.urls import path
 from .views import (
     BankListView,
     BankTransferView,
+    BulkTransferView,
     CreateDynamicVirtualAccountView,
     CreateFixedVirtualAccountView,
     EFTPayoutView,
@@ -96,5 +97,9 @@ urlpatterns = [
     path(
         "payments/verify/",
         VerifySinglePaymentView.as_view(),
+    ),
+    path(
+        "payouts/bulk-transfer/",
+        BulkTransferView.as_view(),
     ),
 ]

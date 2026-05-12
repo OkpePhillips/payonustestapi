@@ -68,3 +68,38 @@ class PayonusClient:
                 }
 
         return response.json()
+
+    @staticmethod
+    def post_multipart(endpoint, data=None, files=None):
+
+        token = get_access_token()
+        
+        url = f"{settings.PAYONUS_BASE_URL}{endpoint}"
+
+        headers = {
+            "Authorization": f"Bearer {token}",
+            "Accept": "application/json",
+        }
+
+        response = requests.post(
+            url,
+            headers=headers,
+            data=data,
+            files=files,
+        )
+
+        try:
+            response.raise_for_status()
+        except requests.HTTPError:
+            print("STATUS:", response.status_code)
+            print("BODY:", response.text)
+
+            try:
+                return response.json()
+            except Exception:
+                return {
+                    "status": response.status_code,
+                    "message": response.text,
+                }
+
+        return response.json()

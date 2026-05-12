@@ -1,7 +1,7 @@
 from django.conf import settings
 from api.models import Transaction
 from api.services.client import PayonusClient
-
+import uuid
 
 def fetch_banks(currency=None):
 
@@ -156,5 +156,38 @@ def initiate_eft_payout(data):
     transaction.fee = response_data.get("fee", 0)
     transaction.status = response_data.get("paymentStatus", "pending").lower()
     transaction.save()
+
+    return response
+
+
+def initiate_bulk_bank_transfer(data):
+    reference = f"BULK-{uuid.uuid4()}"
+
+    form_data = {
+        "description": data.get("description", ""),
+        "reference": reference,
+        "businessId": settings.PAYONUS_BUSINESS_ID,
+        "transferType": data.get("transfer_type", "WALLET_TO_BANK_ACCOUNT"),
+        "countryCode": data.get("country_code", "NG"),
+        "currency": data.get("currency", "NGN"),
+        "notificationUrl": data.get("notification_url", ""),
+        "momoNetwork": data.get("momo_network", ""),
+    }
+
+    uploaded_file = data["file"]
+
+    files = {
+        "file": (
+            uploaded_file.name,
+            uploaded_file.file,
+            uploaded_file.content_type or "text/csv",
+        )
+    }
+
+    response = PayonusClient.post_multipart(
+        "/api/v1/transfer-requests/bulk/bank-transfer",
+        data=form_data,
+        files=files,
+    )
 
     return response

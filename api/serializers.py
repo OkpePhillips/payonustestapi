@@ -178,3 +178,13 @@ class WalletTransferSerializer(serializers.Serializer):
 
 class VerifySinglePaymentSerializer(serializers.Serializer):
     onus_reference = serializers.CharField()
+
+
+class BulkTransferSerializer(serializers.Serializer):
+    file = serializers.FileField()
+    description = serializers.CharField(required=False, allow_blank=True)
+    transfer_type = serializers.CharField(default="WALLET_TO_BANK_ACCOUNT")
+    country_code = serializers.CharField(default="NG")
+    currency = serializers.CharField(default="NGN")
+    notification_url = serializers.URLField(required=False, allow_blank=True)
+    momo_network = serializers.CharField(required=False, allow_blank=True)

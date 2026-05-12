@@ -319,7 +319,7 @@ def verify_single_payment(data):
 
     response_data = response.get("data", response)
 
-    transaction = Transaction.objects.filter(provider_reference=onus_reference).first()
+    transaction = Transaction.objects.filter(onus_reference=onus_reference).first()
 
     if not transaction:
         transaction = Transaction.objects.filter(onus_reference=onus_reference).first()

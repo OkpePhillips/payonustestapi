@@ -67,7 +67,7 @@ def initiate_bank_transfer(data):
 
     transaction.provider_response = response
 
-    transaction.provider_reference = response_data.get("onusReference")
+    transaction.onus_reference = response_data.get("onusReference")
 
     transaction.fee = response_data.get("fee", 0)
 
@@ -111,7 +111,7 @@ def initiate_mobile_money_payout(data):
     response_data = response.get("data", response)
 
     transaction.provider_response = response
-    transaction.provider_reference = response_data.get("onusReference")
+    transaction.onus_reference = response_data.get("onusReference")
     transaction.fee = response_data.get("fee", 0)
     transaction.status = response_data.get("paymentStatus", "pending").lower()
     transaction.save()
@@ -152,7 +152,7 @@ def initiate_eft_payout(data):
     response_data = response.get("data", response)
 
     transaction.provider_response = response
-    transaction.provider_reference = response_data.get("onusReference")
+    transaction.onus_reference = response_data.get("onusReference")
     transaction.fee = response_data.get("fee", 0)
     transaction.status = response_data.get("paymentStatus", "pending").lower()
     transaction.save()

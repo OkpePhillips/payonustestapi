@@ -312,7 +312,10 @@ def fetch_transfer_requests(params):
 def verify_single_payment(data):
     onus_reference = data["onus_reference"]
 
-    response = PayonusClient.get(f"/api/v1/payments/{onus_reference}/verify")
+    response = PayonusClient.get(
+        f"/api/v1/payment-requests/businesses/" f"{settings.PAYONUS_BUSINESS_ID}",
+        params={"onusReference": onus_reference},
+    )
 
     response_data = response.get("data", response)
 
@@ -323,9 +326,11 @@ def verify_single_payment(data):
 
     if transaction:
         transaction.provider_response = response
-        transaction.status = (
-            response_data.get("paymentStatus", transaction.status) or transaction.status
+
+        transaction.status = response_data.get(
+            "paymentStatus", transaction.status
         ).lower()
+
         transaction.save()
 
     return response

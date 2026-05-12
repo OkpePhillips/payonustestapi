@@ -478,8 +478,8 @@ class VerifySinglePaymentView(APIView):
     @swagger_auto_schema(
         request_body=(VerifySinglePaymentSerializer),
         responses={201: (VerifySinglePaymentSerializer)},
-        operation_summary=("Verify Single Payout using onus reference"),
-        operation_description=("Verify Single Payout using onus reference"),
+        operation_summary=("Verify Single Payment using onus reference"),
+        operation_description=("Verify Single Payment using onus reference"),
     )
     def post(self, request):
         serializer = VerifySinglePaymentSerializer(data=request.data)

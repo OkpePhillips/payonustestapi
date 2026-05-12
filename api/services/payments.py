@@ -243,7 +243,7 @@ def initiate_mobile_money_collection(data):
 
     transaction.provider_response = response
 
-    transaction.provider_reference = response_data.get("onusReference")
+    transaction.onus_reference = response_data.get("onusReference")
 
     transaction.status = response_data.get("paymentStatus", "processing").lower()
 
@@ -264,7 +264,7 @@ def verify_mobile_money_otp(data):
 
     response_data = response.get("data", {})
 
-    Transaction.objects.filter(provider_reference=data["onus_reference"]).update(
+    Transaction.objects.filter(onus_reference=data["onus_reference"]).update(
         provider_response=response,
         status=response_data.get("paymentStatus", "processing").lower(),
     )

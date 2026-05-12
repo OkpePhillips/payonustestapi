@@ -63,7 +63,6 @@ def create_dynamic_virtual_account(data):
     if data.get("redirect_url"):
         payload["redirectUrl"] = data["redirect_url"]
 
-
     response = PayonusClient.post("/api/v1/virtual-accounts/dynamic", payload)
 
     response_data = response.get("data", {})
@@ -104,6 +103,8 @@ def create_fixed_virtual_account(data):
 
     for key, value in customer_data.items():
         setattr(customer, key, value)
+
+    customer.dob = data.get("dob")
 
     customer.save()
 

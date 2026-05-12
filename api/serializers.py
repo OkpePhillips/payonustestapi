@@ -24,6 +24,7 @@ class CustomerAddressSerializer(serializers.ModelSerializer):
 
 
 class CustomerSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
 
     address = CustomerAddressSerializer(required=False)
 

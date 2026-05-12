@@ -70,9 +70,12 @@ class VirtualAccountResponseSerializer(serializers.ModelSerializer):
 
         fields = fields = "__all__"
 
+
 class FixedVirtualAccountSerializer(serializers.Serializer):
 
     customer = CustomerSerializer()
+
+    dob = serializers.DateField(required=True)
 
     narration = serializers.CharField(required=False)
 

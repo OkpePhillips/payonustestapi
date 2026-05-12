@@ -536,6 +536,69 @@ class VerifySinglePaymentView(APIView):
 class BulkTransferView(APIView):
     parser_classes = [MultiPartParser, FormParser]
 
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                name="file",
+                in_=openapi.IN_FORM,
+                type=openapi.TYPE_FILE,
+                required=True,
+                description="CSV file containing bulk transfer rows",
+            ),
+            openapi.Parameter(
+                name="description",
+                in_=openapi.IN_FORM,
+                type=openapi.TYPE_STRING,
+                required=False,
+                description="Description of the bulk transfer batch",
+            ),
+            openapi.Parameter(
+                name="transfer_type",
+                in_=openapi.IN_FORM,
+                type=openapi.TYPE_STRING,
+                required=False,
+                default="WALLET_TO_BANK_ACCOUNT",
+                description="Transfer type",
+            ),
+            openapi.Parameter(
+                name="country_code",
+                in_=openapi.IN_FORM,
+                type=openapi.TYPE_STRING,
+                required=False,
+                default="NG",
+                description="Country code",
+            ),
+            openapi.Parameter(
+                name="currency",
+                in_=openapi.IN_FORM,
+                type=openapi.TYPE_STRING,
+                required=False,
+                default="NGN",
+                description="Currency code",
+            ),
+            openapi.Parameter(
+                name="notification_url",
+                in_=openapi.IN_FORM,
+                type=openapi.TYPE_STRING,
+                required=False,
+                description="Optional webhook URL",
+            ),
+            openapi.Parameter(
+                name="momo_network",
+                in_=openapi.IN_FORM,
+                type=openapi.TYPE_STRING,
+                required=False,
+                description="Mobile money network, if applicable",
+            ),
+        ],
+        operation_summary="Initiate Bulk Bank Transfer",
+        operation_description=(
+            "Uploads a CSV file and initiates multiple transfers "
+            "through the Payonus bulk bank transfer endpoint."
+        ),
+        responses={200: "Bulk transfer response"},
+    )
+
     def post(self, request):
         serializer = BulkTransferSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)

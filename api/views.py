@@ -17,6 +17,7 @@ from api.services.payouts import (
     perform_name_enquiry,
 )
 from api.services.wallets import fetch_wallet_transactions, fetch_wallets, wallet_to_wallet_transfer
+from api.services.webhooks import process_payonus_webhook
 from .models import WebhookLog
 from .serializers import (
     BankTransferSerializer,
@@ -371,7 +372,7 @@ class WalletTransactionListView(APIView):
             openapi.Parameter(
                 "parameter_name",
                 openapi.IN_QUERY,
-                description="A description of what this optional param does",
+                description="filter parameter",
                 type=openapi.TYPE_STRING,
                 required=False,  # This makes it optional
             ),
@@ -401,3 +402,30 @@ class WalletTransactionListView(APIView):
 
         response = fetch_wallet_transactions(params)
         return Response(response)
+
+
+class PayonusWebhookView(APIView):
+    authentication_classes = []
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        signature = (
+            request.headers.get("X-Webhook-Signature")
+            or request.headers.get("X-Payonus-Signature")
+            or request.headers.get("signature")
+            or ""
+        )
+
+        result = process_payonus_webhook(
+            payload=request.data,
+            signature=signature,
+        )
+
+        return Response(
+            {
+                "success": True,
+                "message": "Webhook received",
+                "result": result,
+            },
+            status=200,
+        )

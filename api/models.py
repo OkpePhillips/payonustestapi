@@ -361,6 +361,10 @@ class WebhookLog(TimeStampedModel):
     signature = models.TextField()
 
     processed = models.BooleanField(default=False)
+    processing_note = models.TextField(blank=True, null=True)
+
+    onus_reference = models.CharField(max_length=255, blank=True, null=True)
+    merchant_reference = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return f"Webhook {self.id}"

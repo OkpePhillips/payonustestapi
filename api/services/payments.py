@@ -307,3 +307,25 @@ def fetch_transfer_requests(params):
     response = PayonusClient.get("/api/v1/transfer-requests", params=params)
 
     return response
+
+
+def verify_single_payment(data):
+    onus_reference = data["onus_reference"]
+
+    response = PayonusClient.get(f"/api/v1/payments/{onus_reference}/verify")
+
+    response_data = response.get("data", response)
+
+    transaction = Transaction.objects.filter(provider_reference=onus_reference).first()
+
+    if not transaction:
+        transaction = Transaction.objects.filter(onus_reference=onus_reference).first()
+
+    if transaction:
+        transaction.provider_response = response
+        transaction.status = (
+            response_data.get("paymentStatus", transaction.status) or transaction.status
+        ).lower()
+        transaction.save()
+
+    return response

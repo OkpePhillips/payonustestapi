@@ -15,6 +15,7 @@ from .views import (
     PayonusWebhookView,
     TransferRequestListView,
     VerifyMobileMoneyOTPView,
+    VerifySinglePaymentView,
     WalletListView,
     WalletTransactionListView,
     WalletTransferView,
@@ -91,5 +92,9 @@ urlpatterns = [
     path(
         "wallets/transactions/",
         WalletTransactionListView.as_view(),
+    ),
+    path(
+        "payments/verify/",
+        VerifySinglePaymentView.as_view(),
     ),
 ]

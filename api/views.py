@@ -16,7 +16,11 @@ from api.services.payouts import (
     initiate_mobile_money_payout,
     perform_name_enquiry,
 )
-from api.services.wallets import fetch_wallet_transactions, fetch_wallets, wallet_to_wallet_transfer
+from api.services.wallets import (
+    fetch_wallet_transactions,
+    fetch_wallets,
+    wallet_to_wallet_transfer,
+)
 from api.services.webhooks import process_payonus_webhook, verify_webhook_signature
 from .models import WebhookLog
 from .serializers import (
@@ -28,6 +32,7 @@ from .serializers import (
     MobileMoneyPayoutSerializer,
     NameEnquirySerializer,
     VerifyMobileMoneyOTPSerializer,
+    VerifySinglePaymentSerializer,
     VirtualAccountResponseSerializer,
     FixedVirtualAccountSerializer,
     WalletTransferSerializer,
@@ -43,6 +48,7 @@ from .services.payments import (
     initiate_mobile_money_collection,
     list_fixed_virtual_accounts,
     verify_mobile_money_otp,
+    verify_single_payment,
 )
 
 
@@ -465,3 +471,20 @@ class PayonusWebhookView(APIView):
             },
             status=200,
         )
+
+
+class VerifySinglePaymentView(APIView):
+
+    @swagger_auto_schema(
+        request_body=(VerifySinglePaymentSerializer),
+        responses={201: (VerifySinglePaymentSerializer)},
+        operation_summary=("Verify Single Payout using onus reference"),
+        operation_description=("Verify Single Payout using onus reference"),
+    )
+    def post(self, request):
+        serializer = VerifySinglePaymentSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        response = verify_single_payment(serializer.validated_data)
+
+        return Response(response)

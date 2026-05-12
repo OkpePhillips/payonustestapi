@@ -174,3 +174,7 @@ class WalletTransferSerializer(serializers.Serializer):
     country_code = serializers.CharField(default="NG")
     currency = serializers.CharField(default="NGN")
     narration = serializers.CharField(default="Wallet transfer")
+
+
+class VerifySinglePaymentSerializer(serializers.Serializer):
+    onus_reference = serializers.CharField()

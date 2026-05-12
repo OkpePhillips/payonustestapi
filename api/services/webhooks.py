@@ -1,5 +1,8 @@
 from api.models import Transaction, WebhookLog
 
+import hashlib
+import hmac
+from django.conf import settings
 
 def normalize_status(status):
     if not status:
@@ -111,3 +114,22 @@ def process_payonus_webhook(payload, signature=None):
         "status": transaction.status,
         "webhook_id": webhook_log.id,
     }
+
+
+def verify_webhook_signature(payload, received_hash):
+    if not received_hash:
+        return False
+
+    verification_key = settings.PAYONUS_WEBHOOK_SECRET
+
+    account_number = str(payload.get("accountNumber") or "")
+    onus_reference = str(payload.get("onusReference") or "")
+    payment_status = str(payload.get("paymentStatus") or "")
+
+    verification_string = (
+        account_number + onus_reference + payment_status + verification_key
+    )
+
+    computed_hash = hashlib.sha256(verification_string.encode("utf-8")).hexdigest()
+
+    return hmac.compare_digest(computed_hash, received_hash)

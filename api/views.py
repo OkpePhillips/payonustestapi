@@ -17,7 +17,7 @@ from api.services.payouts import (
     perform_name_enquiry,
 )
 from api.services.wallets import fetch_wallet_transactions, fetch_wallets, wallet_to_wallet_transfer
-from api.services.webhooks import process_payonus_webhook
+from api.services.webhooks import process_payonus_webhook, verify_webhook_signature
 from .models import WebhookLog
 from .serializers import (
     BankTransferSerializer,
@@ -419,6 +419,42 @@ class PayonusWebhookView(APIView):
         result = process_payonus_webhook(
             payload=request.data,
             signature=signature,
+        )
+
+        return Response(
+            {
+                "success": True,
+                "message": "Webhook received",
+                "result": result,
+            },
+            status=200,
+        )
+
+
+class PayonusWebhookView(APIView):
+    authentication_classes = []
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        received_hash = request.headers.get("hash", "")
+
+        is_valid = verify_webhook_signature(
+            payload=request.data,
+            received_hash=received_hash,
+        )
+
+        if not is_valid:
+            return Response(
+                {
+                    "success": False,
+                    "message": "Invalid webhook signature",
+                },
+                status=400,
+            )
+
+        result = process_payonus_webhook(
+            payload=request.data,
+            signature=received_hash,
         )
 
         return Response(

@@ -335,3 +335,14 @@ def verify_single_payment(data):
         transaction.save()
 
     return response
+
+
+def list_payin_payment_requests(params=None):
+    params = params or {}
+
+    response = PayonusClient.get(
+        "/api/v1/payment-requests",
+        params=params,
+    )
+
+    return response

@@ -13,7 +13,9 @@ from .views import (
     MobileMoneyNetworksView,
     MobileMoneyPayoutView,
     NameEnquiryView,
+    PayinPaymentRequestListView,
     PayonusWebhookView,
+    PayoutTransferRequestListView,
     TransferRequestListView,
     VerifyMobileMoneyOTPView,
     VerifySinglePaymentView,
@@ -101,5 +103,9 @@ urlpatterns = [
     path(
         "payouts/bulk-transfer/",
         BulkTransferView.as_view(),
+    ),
+    path(
+        "payments/requests/",
+        PayinPaymentRequestListView.as_view(),
     ),
 ]

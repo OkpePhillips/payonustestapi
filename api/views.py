@@ -49,6 +49,8 @@ from .services.payments import (
     fund_sandbox_ngn_wallet,
     initiate_mobile_money_collection,
     list_fixed_virtual_accounts,
+    list_payin_payment_requests,
+    list_transfer_requests,
     verify_mobile_money_otp,
     verify_single_payment,
 )
@@ -604,5 +606,52 @@ class BulkTransferView(APIView):
         serializer.is_valid(raise_exception=True)
 
         response = initiate_bulk_bank_transfer(serializer.validated_data)
+
+        return Response(response)
+
+
+class PayinPaymentRequestListView(APIView):
+
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter("status", openapi.IN_QUERY, type=openapi.TYPE_STRING),
+            openapi.Parameter("businessId", openapi.IN_QUERY, type=openapi.TYPE_STRING),
+            openapi.Parameter("reference", openapi.IN_QUERY, type=openapi.TYPE_STRING),
+            openapi.Parameter(
+                "onusReference", openapi.IN_QUERY, type=openapi.TYPE_STRING
+            ),
+            openapi.Parameter("fromDate", openapi.IN_QUERY, type=openapi.TYPE_STRING),
+            openapi.Parameter("toDate", openapi.IN_QUERY, type=openapi.TYPE_STRING),
+            openapi.Parameter("page", openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
+            openapi.Parameter("size", openapi.IN_QUERY, type=openapi.TYPE_INTEGER),
+        ],
+        operation_summary="List Payment Requests",
+        operation_description="List payin/payment requests with optional filters.",
+        responses={200: "Payment requests retrieved"},
+    )
+    def get(self, request):
+        allowed_filters = [
+            "status",
+            "businessId",
+            "reference",
+            "onusReference",
+            "fromDate",
+            "toDate",
+            "page",
+            "size",
+        ]
+
+        params = {}
+
+        for field in allowed_filters:
+            value = request.query_params.get(field)
+
+            if value is not None:
+                params[field] = value
+
+        if "businessId" not in params:
+            params["businessId"] = settings.PAYONUS_BUSINESS_ID
+
+        response = list_payin_payment_requests(params=params)
 
         return Response(response)

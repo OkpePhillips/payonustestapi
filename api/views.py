@@ -271,16 +271,53 @@ class TransferRequestListView(APIView):
     @swagger_auto_schema(
         manual_parameters=[
             openapi.Parameter(
-                "parameter_name",
+                "status",
                 openapi.IN_QUERY,
-                description="A description of what this optional param does",
+                description="Transfer status",
                 type=openapi.TYPE_STRING,
-                required=False,  # This makes it optional
+            ),
+            openapi.Parameter(
+                "currency",
+                openapi.IN_QUERY,
+                description="Currency code",
+                type=openapi.TYPE_STRING,
+            ),
+            openapi.Parameter(
+                "transferType",
+                openapi.IN_QUERY,
+                description="Transfer type",
+                type=openapi.TYPE_STRING,
+            ),
+            openapi.Parameter(
+                "merchantReference",
+                openapi.IN_QUERY,
+                description="Merchant reference",
+                type=openapi.TYPE_STRING,
+            ),
+            openapi.Parameter(
+                "onusReference",
+                openapi.IN_QUERY,
+                description="Payonus reference",
+                type=openapi.TYPE_STRING,
+            ),
+            openapi.Parameter(
+                "createdFrom",
+                openapi.IN_QUERY,
+                description="Start date YYYY-MM-DD",
+                type=openapi.TYPE_STRING,
+            ),
+            openapi.Parameter(
+                "createdTo",
+                openapi.IN_QUERY,
+                description="End date YYYY-MM-DD",
+                type=openapi.TYPE_STRING,
             ),
         ],
-        responses={201: (FundSandboxWalletSerializer)},
-        operation_summary=("Fund Sandbox"),
-        operation_description=("Funding the sandbox to be able to test transfer"),
+        responses={200: "Transfer requests retrieved"},
+        operation_summary="List Transfer Requests",
+        operation_description=(
+            "Retrieve payout transfer requests " "with optional filtering."
+        ),
     )
     def get(self, request):
 
@@ -479,7 +516,11 @@ class VerifySinglePaymentView(APIView):
         request_body=(VerifySinglePaymentSerializer),
         responses={201: (VerifySinglePaymentSerializer)},
         operation_summary=("Verify Single Payment using onus reference"),
-        operation_description=("Verify Single Payment using onus reference"),
+        operation_description=(
+            "Retrieves the latest status of a payin using the Payonus "
+            "onusReference. Applies to dynamic accounts, fixed accounts, "
+            "wallet links, and mobile money collections."
+        ),
     )
     def post(self, request):
         serializer = VerifySinglePaymentSerializer(data=request.data)

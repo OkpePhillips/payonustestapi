@@ -50,7 +50,6 @@ from .services.payments import (
     initiate_mobile_money_collection,
     list_fixed_virtual_accounts,
     list_payin_payment_requests,
-    list_transfer_requests,
     verify_mobile_money_otp,
     verify_single_payment,
 )

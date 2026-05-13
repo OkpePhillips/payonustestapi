@@ -5,6 +5,7 @@ from .models import (
     CustomerAddress,
     Transaction,
     VirtualAccount,
+    WebhookLog,
 )
 
 
@@ -192,3 +193,9 @@ class BulkTransferSerializer(serializers.Serializer):
     currency = serializers.CharField(default="NGN")
     notification_url = serializers.URLField(required=False, allow_blank=True)
     momo_network = serializers.CharField(required=False, allow_blank=True)
+
+
+class WebhookLogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WebhookLog
+        fields = "__all__"

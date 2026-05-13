@@ -38,6 +38,7 @@ from .serializers import (
     VirtualAccountResponseSerializer,
     FixedVirtualAccountSerializer,
     WalletTransferSerializer,
+    WebhookLogSerializer,
 )
 
 from .services.payments import (
@@ -654,3 +655,10 @@ class PayinPaymentRequestListView(APIView):
         response = list_payin_payment_requests(params=params)
 
         return Response(response)
+
+
+class WebhookLogListView(APIView):
+    def get(self, request):
+        logs = WebhookLog.objects.all().order_by("-created_at")[:100]
+        serializer = WebhookLogSerializer(logs, many=True)
+        return Response(serializer.data)

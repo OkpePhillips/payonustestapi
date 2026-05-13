@@ -21,6 +21,7 @@ from .views import (
     WalletListView,
     WalletTransactionListView,
     WalletTransferView,
+    WebhookLogListView,
 )
 
 urlpatterns = [
@@ -106,5 +107,9 @@ urlpatterns = [
     path(
         "payments/requests/",
         PayinPaymentRequestListView.as_view(),
+    ),
+    path(
+        "webhooks/logs/",
+        WebhookLogListView.as_view(),
     ),
 ]

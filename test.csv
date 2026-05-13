@@ -1,0 +1,3 @@
+name,account,bank code,amount,email,desc
+John Doe,9999991112,000014,5000,john@example.com,Test successful transfer
+Jane Doe,9999991114,000014,5000,jane@example.com,Test failed transfer

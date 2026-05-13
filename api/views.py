@@ -400,8 +400,8 @@ class WalletTransferView(APIView):
     @swagger_auto_schema(
         request_body=(WalletTransferSerializer),
         responses={201: (WalletTransferSerializer)},
-        operation_summary=("EFT payout"),
-        operation_description=("Payout with eft"),
+        operation_summary=("Wallet to Wallet Transfers - Payout"),
+        operation_description=("Wallet to Wallet Transfers - Payout"),
     )
     def post(self, request):
         serializer = WalletTransferSerializer(data=request.data)

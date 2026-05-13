@@ -15,7 +15,6 @@ from .views import (
     NameEnquiryView,
     PayinPaymentRequestListView,
     PayonusWebhookView,
-    PayoutTransferRequestListView,
     TransferRequestListView,
     VerifyMobileMoneyOTPView,
     VerifySinglePaymentView,

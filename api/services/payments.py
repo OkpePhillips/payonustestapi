@@ -339,7 +339,7 @@ def verify_single_payment(data):
 
 def list_payin_payment_requests(params=None):
     params = params or {}
-
+    params["merchantId"] = settings.PAYONUS_MERCHANT_ID
     response = PayonusClient.get(
         "/api/v1/payment-requests",
         params=params,

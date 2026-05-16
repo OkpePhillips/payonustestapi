@@ -4,6 +4,7 @@ import hashlib
 import hmac
 from django.conf import settings
 
+
 def normalize_status(status):
     if not status:
         return "processing"
@@ -69,7 +70,7 @@ def process_payonus_webhook(payload, signature=None):
 
     if extracted["onus_reference"]:
         transaction = Transaction.objects.filter(
-            provider_reference=extracted["onus_reference"]
+            onus_reference=extracted["onus_reference"]
         ).first()
 
         if not transaction:
@@ -98,7 +99,6 @@ def process_payonus_webhook(payload, signature=None):
     transaction.provider_response = payload
 
     if extracted["onus_reference"]:
-        transaction.provider_reference = extracted["onus_reference"]
         transaction.onus_reference = extracted["onus_reference"]
 
     transaction.save()

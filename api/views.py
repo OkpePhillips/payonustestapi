@@ -10,6 +10,9 @@ from rest_framework.decorators import permission_classes
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
+from rest_framework.parsers import JSONParser
+from .parsers import PlainTextParser
+
 from api.services.payouts import (
     initiate_bank_transfer,
     initiate_bulk_bank_transfer,
@@ -115,19 +118,44 @@ class PayonusWebhookView(APIView):
 
     authentication_classes = []
     permission_classes = []
+    parser_classes = [JSONParser, PlainTextParser]
 
     def post(self, request):
 
         payload = request.data
 
-        WebhookLog.objects.create(
-            event_type=payload.get("eventType"),
+        if isinstance(payload, str):
+            payload = json.loads(payload)
+
+        received_hash = request.headers.get("hash", "")
+
+        is_valid = verify_webhook_signature(
             payload=payload,
-            signature=request.headers.get("X-Webhook-Signature", ""),
-            processed=True,
+            received_hash=received_hash,
         )
 
-        return Response({"success": True, "message": "Webhook received"}, status=200)
+        if not is_valid:
+            return Response(
+                {
+                    "success": False,
+                    "message": "Invalid webhook signature",
+                },
+                status=400,
+            )
+
+        result = process_payonus_webhook(
+            payload=payload,
+            signature=received_hash,
+        )
+
+        return Response(
+            {
+                "success": True,
+                "message": "Webhook received",
+                "result": result,
+            },
+            status=200,
+        )
 
 
 class FixedVirtualAccountListView(APIView):
@@ -606,7 +634,6 @@ class BulkTransferView(APIView):
         ),
         responses={200: "Bulk transfer response"},
     )
-
     def post(self, request):
         serializer = BulkTransferSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)

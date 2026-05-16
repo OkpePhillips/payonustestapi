@@ -123,10 +123,54 @@ class PayonusWebhookView(APIView):
 
     def post(self, request):
 
-        payload = request.data
+        # payload = request.data
 
-        if isinstance(payload, str):
-            payload = json.loads(payload)
+        # if isinstance(payload, str):
+        #     payload = json.loads(payload)
+
+        # received_hash = request.headers.get("hash", "")
+
+        # is_valid = verify_webhook_signature(
+        #     payload=payload,
+        #     received_hash=received_hash,
+        # )
+
+        # if not is_valid:
+        #     return Response(
+        #         {
+        #             "success": False,
+        #             "message": "Invalid webhook signature",
+        #         },
+        #         status=400,
+        #     )
+
+        # result = process_payonus_webhook(
+        #     payload=payload,
+        #     signature=received_hash,
+        # )
+
+        # return Response(
+        #     {
+        #         "success": True,
+        #         "message": "Webhook received",
+        #         "result": result,
+        #     },
+        #     status=200,
+        # )
+   
+        raw_body = request.body.decode("utf-8")
+
+        try:
+            payload = json.loads(raw_body)
+        except json.JSONDecodeError:
+            return Response(
+                {
+                    "success": False,
+                    "message": "Invalid JSON payload",
+                    "raw_body": raw_body,
+                },
+                status=400,
+            )
 
         received_hash = request.headers.get("hash", "")
 
@@ -157,7 +201,6 @@ class PayonusWebhookView(APIView):
             },
             status=200,
         )
-
 
 class FixedVirtualAccountListView(APIView):
 

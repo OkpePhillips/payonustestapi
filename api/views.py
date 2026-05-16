@@ -119,7 +119,7 @@ class PayonusWebhookView(APIView):
 
     authentication_classes = []
     permission_classes = []
-    parser_classes = [JSONParser, PlainTextParser]
+    parser_classes = [JSONParser, PlainTextParser, AnyContentTypeParser]
 
     def post(self, request):
 

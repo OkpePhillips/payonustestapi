@@ -67,6 +67,17 @@ def create_dynamic_virtual_account(data):
 
     response_data = response.get("data", {})
 
+    if response.get("status") != 200 or response_data.get("error"):
+        transaction.status = "failed"
+        transaction.provider_response = response
+        transaction.save()
+
+        return {
+            "success": False,
+            "message": response.get("message", "Unable to create virtual account"),
+            "provider_response": response,
+        }
+
     transaction.onus_reference = response_data.get("onusReference")
 
     transaction.provider_response = response

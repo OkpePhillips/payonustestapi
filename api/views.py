@@ -76,6 +76,12 @@ class CreateDynamicVirtualAccountView(APIView):
 
         virtual_account = create_dynamic_virtual_account(serializer.validated_data)
 
+        if (
+            isinstance(virtual_account, dict)
+            and virtual_account.get("success") is False
+        ):
+            return Response(virtual_account, status=400)
+
         response_serializer = VirtualAccountResponseSerializer(virtual_account)
 
         return Response(response_serializer.data, status=status.HTTP_201_CREATED)

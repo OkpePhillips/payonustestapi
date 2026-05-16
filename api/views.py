@@ -12,7 +12,7 @@ from drf_yasg import openapi
 import json
 
 from rest_framework.parsers import JSONParser
-from .parsers import PlainTextParser
+from .parsers import AnyContentTypeParser
 
 from api.services.payouts import (
     initiate_bank_transfer,
@@ -119,7 +119,7 @@ class PayonusWebhookView(APIView):
 
     authentication_classes = []
     permission_classes = []
-    parser_classes = [JSONParser, PlainTextParser, AnyContentTypeParser]
+    parser_classes = [JSONParser, AnyContentTypeParser]
 
     def post(self, request):
 
